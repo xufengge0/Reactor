@@ -1,8 +1,11 @@
 #include"TheadPool.h"
 TheadPool::TheadPool(size_t threadnum,const std::string& theadtype):stop_(false),theadtype_(theadtype)
 {
+    printf("创建线程池, 主线程id: %d\n", syscall(SYS_gettid));
     for(int i=1;i<=threadnum;++i)
     {
+        // 创建线程 不会阻塞在这个地方
+        // 线程的入口函数是一个lambda表达式 
         threads_.emplace_back([this]{
 
             printf("creat %s thread(%d)\n",theadtype_.c_str(),syscall(SYS_gettid));   // 获取线程id
@@ -33,6 +36,7 @@ TheadPool::TheadPool(size_t threadnum,const std::string& theadtype):stop_(false)
             }
             
         });
+        printf("创建成功, i = %d\n", i);
     }
 }
 
